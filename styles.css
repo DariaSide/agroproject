@@ -82,16 +82,17 @@ legend {
 
 button {
     padding: 10px 20px;
-    background-color: var(--deep-green);
-    color: white;
+    background-color: var(--soft-light-green); /* Глубкий зеленый */
+    color: rgb(233, 23, 23); /* Белый текст */
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: var(--warm-terracotta);
+    background-color: var(--soft-light-green); /* Мягкий светло-зеленый на наведение */
 }
 
 footer {
@@ -102,4 +103,34 @@ footer {
     position: fixed;
     width: 100%;
     bottom: 0;
+}
+
+.collapsible .content {
+    max-height: 0; /* Устанавливаем высоту 0, чтобы скрыть содержимое */
+    overflow: hidden; /* Скрываем содержимое за пределами контейнера */
+    padding: 0; /* Убираем внутренние отступы, чтобы избежать пустого пространства */
+    background-color: var(--soft-light-green); /* Цвет фона */
+    border: 1px solid var(--deep-green); /* Границы */
+    border-radius: 4px;
+    margin-top: 10px;
+    transition: max-height 0.5s ease, padding 0.3s ease; /* Добавляем плавный переход */
+}
+
+.collapsible h2 {
+    cursor: pointer; /* Указываем, что элемент кликабелен */
+    margin: 0;
+    padding: 10px;
+    background-color: var(--warm-terracotta); /* Цвет заголовка */
+    color: white;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.collapsible h2:hover {
+    background-color: var(--muted-coral);;
+}
+
+.collapsible:hover .content {
+    max-height: 500px; /* Достаточно большая высота, чтобы вместить содержимое */
+    padding: 10px; /* Возвращаем внутренние отступы при раскрытии */
 }
