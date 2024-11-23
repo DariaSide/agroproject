@@ -1,12 +1,13 @@
 /* Основные цвета */
 :root {
-    --warm-terracotta: #C77058;
+    --warm-terracotta: #706562;
     --dark-brown: #2D1C12;
-    --muted-coral: #EF8B76;
-    --deep-green: #2B6F16;
-    --soft-light-green: #7FAF70;
+    --muted-coral: #e9c3bc;
+    --deep-green: #566651;
+    --soft-light-green: #69a854;
 }
 
+/* Общие стили */
 body {
     font-family: Arial, sans-serif;
     background-color: var(--soft-light-green);
@@ -16,12 +17,149 @@ body {
 }
 
 header {
+    position: relative; /* Для абсолютного позиционирования иконки пользователя */
     background-color: var(--warm-terracotta);
     color: white;
     padding: 20px;
     text-align: center;
 }
 
+.user-menu {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.user-icon {
+    font-size: 40px; /* Если используете Font Awesome */
+    color: white;
+    transition: transform 0.3s;
+}
+
+.user-icon:hover {
+    transform: scale(1.1);
+}
+
+/* Выпадающее меню */
+.dropdown {
+    display: none; /* Скрыто по умолчанию */
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: white;
+    border: 1px solid var(--deep-green);
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 150px;
+    padding: 10px;
+}
+
+.dropdown-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px;
+    background-color: white;
+    color: var(--deep-green);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: var(--soft-light-green);
+}
+
+/* Модальные окна */
+.modal {
+    display: none; /* Скрыто по умолчанию */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    margin: 10% auto;
+    padding: 20px;
+    width: 300px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: black;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: var(--muted-coral);
+}
+
+.role-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: var(--deep-green);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.role-button:hover {
+    background-color: var(--soft-light-green);
+}
+
+.modal-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: var(--deep-green);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.modal-button:hover {
+    background-color: var(--soft-light-green);
+}
+
+/* Кнопка авторизации */
+.login-button, .register-button {
+    padding: 10px 20px;
+    background-color: var(--warm-terracotta);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover, .register-button:hover {
+    background-color: var(--muted-coral);
+}
+
+/* Основные стили формы */
 main {
     padding: 20px;
 }
@@ -32,17 +170,41 @@ form {
     gap: 20px;
 }
 
-section {
+.collapsible {
     background-color: white;
-    padding: 20px;
+    padding: 0;
     border-radius: 8px;
     border: 2px solid var(--deep-green);
+    margin-bottom: 20px;
 }
 
-section h2 {
-    color: var(--deep-green);
-    border-bottom: 2px solid var(--deep-green);
-    padding-bottom: 5px;
+.collapsible h2 {
+    cursor: pointer;
+    margin: 0;
+    padding: 15px;
+    background-color: var(--warm-terracotta);
+    color: white;
+    border-radius: 4px 4px 0 0;
+    transition: background-color 0.3s ease;
+}
+
+.collapsible h2:hover {
+    background-color: var(--muted-coral);
+}
+
+.collapsible .content {
+    max-height: 0; /* Скрываем содержимое */
+    overflow: hidden; /* Прячем содержимое */
+    padding: 0 20px; /* Убираем отступы */
+    background-color: var(--soft-light-green);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    transition: max-height 0.5s ease, padding 0.3s ease;
+}
+
+.collapsible .content.open {
+    max-height: 1000px; /* Достаточно большая высота для отображения содержимого */
+    padding: 20px;
 }
 
 label {
@@ -55,7 +217,7 @@ label {
 input, textarea, select {
     padding: 8px;
     border: 1px solid var(--deep-green);
-    border-radius: 4px;
+    border-radius: 8px;
     margin-top: 5px;
 }
 
@@ -71,7 +233,7 @@ textarea {
 fieldset {
     border: 1px solid var(--muted-coral);
     padding: 10px;
-    border-radius: 4px;
+    border-radius: 8px;
     margin-bottom: 10px;
 }
 
@@ -80,19 +242,34 @@ legend {
     font-weight: bold;
 }
 
-button {
+button[type="submit"] {
     padding: 10px 20px;
-    background-color: var(--soft-light-green); /* Глубкий зеленый */
-    color: rgb(233, 23, 23); /* Белый текст */
+    background-color: var(--deep-green);
+    color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: var(--soft-light-green); /* Мягкий светло-зеленый на наведение */
+button[type="submit"]:hover {
+    background-color: var(--warm-terracotta);
+}
+
+.logout-button {
+    padding: 8px 16px;
+    background-color: var(--muted-coral);
+    color: white;
+    border: none;
+    border-radius: 10px; /* Увеличено скругление */
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: var(--warm-terracotta);
 }
 
 footer {
@@ -103,34 +280,4 @@ footer {
     position: fixed;
     width: 100%;
     bottom: 0;
-}
-
-.collapsible .content {
-    max-height: 0; /* Устанавливаем высоту 0, чтобы скрыть содержимое */
-    overflow: hidden; /* Скрываем содержимое за пределами контейнера */
-    padding: 0; /* Убираем внутренние отступы, чтобы избежать пустого пространства */
-    background-color: var(--soft-light-green); /* Цвет фона */
-    border: 1px solid var(--deep-green); /* Границы */
-    border-radius: 4px;
-    margin-top: 10px;
-    transition: max-height 0.5s ease, padding 0.3s ease; /* Добавляем плавный переход */
-}
-
-.collapsible h2 {
-    cursor: pointer; /* Указываем, что элемент кликабелен */
-    margin: 0;
-    padding: 10px;
-    background-color: var(--warm-terracotta); /* Цвет заголовка */
-    color: white;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-}
-
-.collapsible h2:hover {
-    background-color: var(--muted-coral);;
-}
-
-.collapsible:hover .content {
-    max-height: 500px; /* Достаточно большая высота, чтобы вместить содержимое */
-    padding: 10px; /* Возвращаем внутренние отступы при раскрытии */
 }
