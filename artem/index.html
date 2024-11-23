@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализ</title>
+    <script src="/eel.js"></script>
+</head>
+<body>
+    <h2>Сделать анализ</h2>
+    <button id="analyzeButton">Сделать анализ</button>
+    <div id="tableContainer"></div>
+
+    <script>
+        document.getElementById("analyzeButton").addEventListener("click", async () => {
+            const data = await eel.get_table_data()();
+
+            if (data.error) {
+                alert("Ошибка: " + data.error);
+                return;
+            }
+
+            const tableContainer = document.getElementById("tableContainer");
+            tableContainer.innerHTML = ""; 
+            const table = document.createElement("table");
+            table.border = "1";
+
+            const header = table.createTHead();
+            const headerRow = header.insertRow();
+            Object.keys(data[0]).forEach((key) => {
+                const th = document.createElement("th");
+                th.textContent = key;
+                headerRow.appendChild(th);
+            });
+
+            const body = table.createTBody();
+            data.forEach((row) => {
+                const tableRow = body.insertRow();
+                Object.values(row).forEach((value) => {
+                    const cell = tableRow.insertCell();
+                    cell.textContent = value;
+                });
+            });
+
+            tableContainer.appendChild(table);
+        });
+    </script>
+</body>
+</html>

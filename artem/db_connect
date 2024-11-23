@@ -1,0 +1,5 @@
+Самцы - postgresql://neondb_owner:epaO1y7NSvZr@ep-quiet-credit-a50ysxr6.us-east-2.aws.neon.tech/neondb?sslmode=require
+
+Самки - postgresql://neondb_owner:a0XJgBCt2xMI@ep-rapid-shape-a5bjuo6b.us-east-2.aws.neon.tech/neondb?sslmode=require
+
+Потомство - postgresql://neondb_owner:v2kS9BHiQFng@ep-shrill-haze-a5jtuspa.us-east-2.aws.neon.tech/neondb?sslmode=require
