@@ -6,13 +6,13 @@ import os
 from openpyxl import load_workbook
 
 # Инициализация Eel
-#eel.init('front')
+eel.init('front')
 
 # Путь к Excel-файлу
 EXCEL_FILE = 'data.xlsx'
 
 # Функция для подключения к базе данных и получения данных
-#@eel.expose
+@eel.expose
 def get_table_data():
     async def fetch_data():
         try:
@@ -40,28 +40,39 @@ def get_table_data():
 get_table_data()
 
 
-# Функция для сохранения данных из формы в Excel
-# @eel.expose
-# def save_form_data(form_data):
-#     try:
-#         # Преобразуем данные из формы в DataFrame
-#         df = pd.DataFrame([form_data])
 
-#         # Если файл существует, добавляем данные, иначе создаем новый файл
-#         if os.path.exists(EXCEL_FILE):
-#             # Читаем существующий файл
-#             existing_df = pd.read_excel(EXCEL_FILE)
-#             # Объединяем данные
-#             combined_df = pd.concat([existing_df, df], ignore_index=True)
-#             # Записываем обратно
-#             combined_df.to_excel(EXCEL_FILE, index=False)
-#         else:
-#             # Создаем новый Excel-файл
-#             df.to_excel(EXCEL_FILE, index=False)
-        
-#         return {"status": "success", "message": "Данные успешно сохранены."}
-#     except Exception as e:
-#         return {"status": "error", "message": str(e)}
+@eel.expose
+def save_form_data(form_data):
+    try:
+        if os.path.exists(EXCEL_FILE):
+            # Загружаем существующий Excel-файл
+            book = load_workbook(EXCEL_FILE)
+            writer = pd.ExcelWriter(EXCEL_FILE, engine='openpyxl')
+            writer.book = book
+            writer.sheets = {ws.title: ws for ws in book.worksheets}
+        else:
+            # Создаём новый Excel-файл
+            writer = pd.ExcelWriter(EXCEL_FILE, engine='openpyxl')
 
-# # Запуск Eel
-# eel.start('index.html', size=(760, 760))
+        for section, data in form_data.items():
+            df = pd.DataFrame([data])
+
+            if section in writer.sheets:
+                # Читаем существующий лист
+                existing_df = pd.read_excel(writer, sheet_name=section)
+                # Объединяем данные
+                combined_df = pd.concat([existing_df, df], ignore_index=True)
+            else:
+                # Создаём новый лист
+                combined_df = df
+
+            # Записываем данные в лист
+            combined_df.to_excel(writer, sheet_name=section, index=False)
+
+        writer.save()
+        writer.close()
+        return {"status": "success", "message": "Данные успешно сохранены."}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+eel.start('index.html', size=(760, 760))

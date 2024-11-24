@@ -219,29 +219,91 @@ document.getElementById("saveButton").addEventListener("click", async () => {
     const form = document.getElementById("generationForm");
     const formData = {};
 
-    // Получаем все элементы формы
-    const inputs = form.querySelectorAll("input, textarea, select");
+    // Получаем все секции формы
+    const sections = form.querySelectorAll("section.collapsible");
 
-    inputs.forEach(input => {
-        if (input.type === "checkbox") {
-            formData[input.name] = input.checked;
-        } else if (input.type === "file") {
-            // Обработка файлов (если необходимо)
-            // Например, можно загрузить файлы на сервер или игнорировать
-            formData[input.name] = input.value; // Или другой способ обработки
-        } else {
-            formData[input.name] = input.value;
-        }
+    sections.forEach(section => {
+        const sectionName = section.querySelector("h2").innerText;
+        const data = {};
+
+        // Получаем все поля внутри секции
+        const inputs = section.querySelectorAll("input, textarea, select");
+
+        inputs.forEach(input => {
+            if (input.type === "checkbox") {
+                data[input.name] = input.checked;
+            } else if (input.type === "file") {
+                // Обработка файлов (можно реализовать загрузку файлов на сервер)
+                data[input.name] = input.value.split('\\').pop(); // Получаем имя файла
+            } else {
+                data[input.name] = input.value;
+            }
+        });
+
+        formData[sectionName] = data;
     });
 
-    // Отправляем данные в Python через Eel
-    const response = await eel.save_form_data(formData)();
+    try {
+        // Отправляем данные в Python через Eel
+        const response = await eel.save_form_data(formData)();
 
-    // Обрабатываем ответ
-    if (response.status === "success") {
-        alert(response.message);
-        form.reset(); // Сбрасываем форму
-    } else {
-        alert("Ошибка: " + response.message);
+        // Обрабатываем ответ
+        if (response.status === "success") {
+            alert(response.message);
+            form.reset(); // Сбрасываем форму
+        } else {
+            alert("Ошибка: " + response.message);
+        }
+    } catch (error) {
+        console.error("Ошибка при сохранении данных:", error);
+        alert("Произошла ошибка при сохранении данных.");
     }
+});
+
+document.getElementById("analyzeButton").addEventListener("click", async () => {
+    const data = await eel.get_table_data()();
+
+    // Проверяем на ошибку
+    if (data.error) {
+        alert("Ошибка: " + data.error);
+        return;
+    }
+
+    // Создаем таблицу для отображения данных
+    const tableContainer = document.getElementById("tableContainer");
+    tableContainer.innerHTML = ""; // Очищаем контейнер
+
+    if (data.length === 0) {
+        tableContainer.innerHTML = "<p>Нет данных для отображения.</p>";
+        return;
+    }
+
+    const table = document.createElement("table");
+    table.border = "1";
+    table.style.borderCollapse = "collapse";
+    table.style.width = "100%";
+
+     // Создаем заголовок таблицы
+    const header = table.createTHead();
+    const headerRow = header.insertRow();
+    Object.keys(data[0]).forEach((key) => {
+        const th = document.createElement("th");
+        th.textContent = key;
+        th.style.padding = "8px";
+        th.style.backgroundColor = "#f2f2f2";
+        headerRow.appendChild(th);
+    });
+
+    // Заполняем таблицу данными
+    const body = table.createTBody();
+    data.forEach((row) => {
+        const tableRow = body.insertRow();
+        Object.values(row).forEach((value) => {
+            const cell = tableRow.insertCell();
+            cell.textContent = value;
+            cell.style.padding = "8px";
+        });
+    });
+
+    tableContainer.appendChild(table);
 });
